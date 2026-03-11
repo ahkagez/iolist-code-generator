@@ -17,7 +17,7 @@
 		<!-- ── UPLOAD SCREEN ── -->
 		<div v-if="screen === 'upload'" class="upload-screen">
 
-			<img src="images/svg/moon-v1.svg" class="style-mode" alt="Light controller" />
+			<img :src="styleModeImg" class="style-mode" alt="Toggle theme" @click="toggleTheme()" style="cursor:pointer" />
 
 			<div class="ocean-bg">
 				<!--
@@ -32,12 +32,12 @@
 					viewBox="0 0 200 250"
 					preserveAspectRatio="xMidYMid meet"
 					xmlns="http://www.w3.org/2000/svg">
-					<path d="M 92 30 Q 30 110 15 190 Q 55 185 92 190 Z" fill="#7dd3fc"/>
-					<path d="M 102 25 L 102 190 Q 150 185 190 190 Q 150 110 102 25 Z" fill="#f8fafc"/>
-					<rect x="94" y="15" width="6" height="180" fill="#94a3b8" rx="3"/>
-					<path d="M 5 190 L 195 190 L 170 225 L 30 225 Z" fill="#cbd5e1"/>
-					<path d="M 8 195 L 192 195 L 186 202 L 14 202 Z" fill="#0f172a"/>
-					<path d="M 30 225 L 170 225 L 160 240 L 40 240 Z" fill="#334155"/>
+					<path d="M 92 30 Q 30 110 15 190 Q 55 185 92 190 Z" fill="var(--yacht-sail-1)"/>
+					<path d="M 102 25 L 102 190 Q 150 185 190 190 Q 150 110 102 25 Z" fill="var(--yacht-sail-2)"/>
+					<rect x="94" y="15" width="6" height="180" fill="var(--yacht-mast)" rx="3"/>
+					<path d="M 5 190 L 195 190 L 170 225 L 30 225 Z" fill="var(--yacht-hull-top)"/>
+					<path d="M 8 195 L 192 195 L 186 202 L 14 202 Z" fill="var(--yacht-waterline)"/>
+					<path d="M 30 225 L 170 225 L 160 240 L 40 240 Z" fill="var(--yacht-hull-bot)"/>
 				</svg>
 
 				<!-- Olas (z-index superior, cubren el casco → efecto flotación) -->
@@ -45,8 +45,8 @@
 					viewBox="0 0 1440 320"
 					preserveAspectRatio="none"
 					xmlns="http://www.w3.org/2000/svg">
-					<path fill="#0284c7" fill-opacity="0.5" d="M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,165.3C672,160,768,96,864,96C960,96,1056,160,1152,176C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/>
-					<path fill="#0369a1" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,240C672,256,768,256,864,240C960,224,1056,192,1152,181.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/>
+					<path fill="var(--upload-wave-1)" fill-opacity="0.5" d="M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,165.3C672,160,768,96,864,96C960,96,1056,160,1152,176C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/>
+					<path fill="var(--upload-wave-2)" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,240C672,256,768,256,864,240C960,224,1056,192,1152,181.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/>
 				</svg>
 			</div>
 
@@ -73,10 +73,13 @@
 			<nav class="side-nav">
 				<div class="nav-logo">
 					<span class="nav-logo-text">I/O Generator</span>
-					<label class="nav-file-btn" title="Cargar otro archivo">
-						📁
-						<input type="file" @change="onFile" accept=".xlsx,.xls,.xlsm" style="display:none" />
-					</label>
+					<div style="display:flex;gap:4px;align-items:center">
+						<button class="nav-file-btn" @click="toggleTheme()" :title="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">{{ isDarkMode ? '☀' : '☽' }}</button>
+						<label class="nav-file-btn" title="Cargar otro archivo">
+							📁
+							<input type="file" @change="onFile" accept=".xlsx,.xls,.xlsm" style="display:none" />
+						</label>
+					</div>
 				</div>
 
 				<div class="nav-section-label">GVL</div>

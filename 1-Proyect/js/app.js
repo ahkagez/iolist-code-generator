@@ -1,12 +1,40 @@
 const { createApp } = Vue;
 
 // ── Apply config.js to CSS variables ────────────────────────────────────────
-(function () {
-  const cfg = window.APP_CONFIG || {};
+const _cfg = window.APP_CONFIG || {};
+
+function _applyThemeVars(t) {
   const root = document.documentElement;
   const set  = (v, val) => { if (val != null) root.style.setProperty(v, String(val)); };
+  set('--upload-card-bg',  t.uploadCardBg);
+  set('--bg-main',         t.bgMain);
+  set('--bg-sidebar',      t.bgSidebar);
+  set('--bg-editor',       t.bgEditor);
+  set('--bg-gutter',       t.bgGutter);
+  set('--bg-window-bar',   t.bgWindowBar);
+  set('--bg-panel',        t.bgPanel);
+  set('--border-color',    t.borderColor);
+  set('--border-dark',     t.borderDark);
+  set('--text-main',       t.textMain);
+  set('--text-code',       t.textCode);
+  set('--text-muted',      t.textMuted);
+  set('--line-numbers',    t.lineNumbers);
+  set('--accent',          t.accent);
+  set('--upload-btn',      t.uploadBtn);
+  set('--upload-btn-text', t.uploadBtnText);
+  set('--upload-wave-1',   t.uploadWave1);
+  set('--upload-wave-2',   t.uploadWave2);
+  set('--yacht-sail-1',    t.yachtSail1);
+  set('--yacht-sail-2',    t.yachtSail2);
+  set('--yacht-mast',      t.yachtMast);
+  set('--yacht-hull-top',  t.yachtHullTop);
+  set('--yacht-waterline', t.yachtWaterline);
+  set('--yacht-hull-bot',  t.yachtHullBot);
+}
 
-  const s = cfg.syntax || {};
+function _applySyntaxVars(s) {
+  const root = document.documentElement;
+  const set  = (v, val) => { if (val != null) root.style.setProperty(v, String(val)); };
   set('--plc-kw',      s.keyword);
   set('--plc-type',    s.type);
   set('--plc-comment', s.comment);
@@ -15,23 +43,16 @@ const { createApp } = Vue;
   set('--plc-hwaddr',  s.hwAddress);
   set('--plc-attr',    s.attribute);
   set('--plc-xmltag',  s.xmlTag);
+}
 
-  const t = cfg.theme || {};
-  set('--bg-main',       t.bgMain);
-  set('--bg-sidebar',    t.bgSidebar);
-  set('--bg-editor',     t.bgEditor);
-  set('--bg-gutter',     t.bgGutter);
-  set('--bg-window-bar', t.bgWindowBar);
-  set('--bg-panel',      t.bgPanel);
-  set('--border-color',  t.borderColor);
-  set('--text-main',     t.textMain);
-  set('--text-code',     t.textCode);
-  set('--text-muted',    t.textMuted);
-  set('--line-numbers',  t.lineNumbers);
-  set('--accent',        t.accent);
-  set('--upload-btn',    t.uploadBtn);
+(function () {
+  const root = document.documentElement;
+  const set  = (v, val) => { if (val != null) root.style.setProperty(v, String(val)); };
 
-  const e = cfg.editor || {};
+  _applySyntaxVars(_cfg.syntax || {});
+  _applyThemeVars(_cfg.theme || {});
+
+  const e = _cfg.editor || {};
   if (e.fontFamily) set('--editor-font-family', e.fontFamily);
   if (e.fontSize)   set('--editor-font-size',   e.fontSize + 'px');
   if (e.lineHeight) set('--editor-line-height',  String(e.lineHeight));
@@ -43,6 +64,9 @@ const { createApp } = Vue;
       data() {
         const appCfg = ((window.APP_CONFIG || {}).app) || {};
 		return {
+          // Theme
+          isDarkMode: true,
+
           // Screen
           screen: 'upload',
           fileError: '',
@@ -406,10 +430,25 @@ END_VAR</xhtml>
         },
         alarmAnalogLinesCount() {
           return (this.alarmAnalogText || '').split('\n').filter(l => l.trim()).length;
-        }
+        },
+        styleModeImg() {
+          return this.isDarkMode ? 'images/svg/moon-v1.svg' : 'images/svg/sun-v1.svg';
+        },
       },
 
       methods: {
+        toggleTheme() {
+          this.isDarkMode = !this.isDarkMode;
+          const t = this.isDarkMode
+            ? (_cfg.theme      || {})
+            : (_cfg.themeLight || {});
+          const s = this.isDarkMode
+            ? (_cfg.syntax      || {})
+            : (_cfg.syntaxLight || {});
+          _applyThemeVars(t);
+          _applySyntaxVars(s);
+        },
+
         onFile(e) {
           const file = e.target.files && e.target.files[0];
           if (!file) return;

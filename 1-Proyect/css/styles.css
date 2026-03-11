@@ -26,7 +26,17 @@
   --text-muted:     #64748b;
   --line-numbers:   #3d5063;
   --accent:         #38bdf8;
+  --upload-card-bg:  rgba(30, 41, 59, 0.7);
   --upload-btn:     #0284c7;
+  --upload-btn-text: #ffffff;
+  --upload-wave-1:  #0284c7;
+  --upload-wave-2:  #0369a1;
+  --yacht-sail-1:   #7dd3fc;
+  --yacht-sail-2:   #f8fafc;
+  --yacht-mast:     #94a3b8;
+  --yacht-hull-top: #cbd5e1;
+  --yacht-waterline:#0f172a;
+  --yacht-hull-bot: #334155;
 
   /* Editor */
   --editor-font-family: Consolas, "Courier New", monospace;
@@ -308,14 +318,14 @@ h3,h4 { margin: 10px 0 6px 0;  color: var(--text-main); }
 
 .style-mode {
   position: absolute;
-  left: 94%;
-  bottom: 85%;
-  width: 250px;
+  left: 89%;
+  bottom: 75%;
+  width: 300px;
   height: auto;
 }
 
 .upload-card {
-  background: rgba(30, 41, 59, 0.7);
+  background: var(--upload-card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.1);
@@ -334,7 +344,7 @@ h3,h4 { margin: 10px 0 6px 0;  color: var(--text-main); }
 .upload-btn {
   display: inline-block;
   background: var(--upload-btn);
-  color: #fff;
+  color: var(--upload-btn-text);
   padding: 12px 28px;
   border-radius: 10px;
   font-size: 15px;

@@ -21,6 +21,49 @@
 window.APP_CONFIG = {
 
   // ════════════════════════════════════════════════════════════════════
+  //  TEMA CLARO  (se activa al hacer clic en el icono luna/sol)
+  //  Mismas claves que 'theme' y 'syntax' — solo cambia los valores
+  // ════════════════════════════════════════════════════════════════════
+  themeLight: {
+    bgMain:       '#f8fafc',
+    bgSidebar:    '#f1f5f9',
+    bgEditor:     '#ffffff',
+    bgGutter:     '#f1f5f9',
+    bgWindowBar:  '#e2e8f0',
+    bgPanel:      '#e2e8f0',
+    borderColor:  '#e2e8f0',
+    borderDark:   '#cbd5e1',
+    textMain:     '#0f172a',
+    textCode:     '#334155',
+    textMuted:    '#64748b',
+    lineNumbers:  '#94a3b8',
+    accent:       '#0284c7',
+    uploadCardBg: 'rgba(213, 222, 238, 0.7)',
+    uploadBtn:    '#0284c7',
+    uploadBtnText: '#ffffff',
+    uploadWave1:  '#0284c7',
+    uploadWave2:  '#0369a1',
+    yachtSail1:     '#7dd3fc',
+    yachtSail2:     '#0f172a',
+    yachtMast:      '#475569',
+    yachtHullTop:   '#94a3b8',
+    yachtWaterline: '#f8fafc',
+    yachtHullBot:   '#64748b',
+  },
+
+  syntaxLight: {
+    keyword:   '#0070c1',
+    type:      '#267f99',
+    comment:   '#008000',
+    string:    '#a31515',
+    number:    '#098658',
+    hwAddress: '#795e26',
+    attribute: '#af00db',
+    xmlTag:    '#800000',
+  },
+
+
+  // ════════════════════════════════════════════════════════════════════
   //  CONFIGURACIÓN DE LA APLICACIÓN
   // ════════════════════════════════════════════════════════════════════
   app: {
@@ -108,6 +151,9 @@ window.APP_CONFIG = {
     // Color de los bordes entre elementos
     borderColor:  '#1e293b',
 
+    // Color de los bordes más marcados (separadores, bordes de ventana)
+    borderDark:   '#334155',
+
     // Color del texto principal
     textMain:     '#f8fafc',
 
@@ -123,8 +169,28 @@ window.APP_CONFIG = {
     // Color de acento: barra activa del menú, logo, botón de subir archivo
     accent:       '#38bdf8',
 
+    // Fondo de la tarjeta de carga (pantalla inicial)
+    uploadCardBg: 'rgba(30, 41, 59, 0.7)',
+
     // Color del botón de seleccionar archivo (pantalla inicial)
     uploadBtn:    '#0284c7',
+
+    // Color del texto del botón de seleccionar archivo
+    uploadBtnText: '#ffffff',
+
+    // Olas del fondo (pantalla inicial)
+    //   uploadWave1 = ola delantera (más clara, opaca al 50%)
+    //   uploadWave2 = ola trasera (más oscura, opaca al 100%)
+    uploadWave1:  '#0284c7',
+    uploadWave2:  '#0369a1',
+
+    // Barco (pantalla inicial)
+    yachtSail1:     '#7dd3fc',   // vela izquierda (azul claro)
+    yachtSail2:     '#f8fafc',   // vela derecha (blanca)
+    yachtMast:      '#94a3b8',   // palo mayor
+    yachtHullTop:   '#cbd5e1',   // cubierta del casco
+    yachtWaterline: '#0f172a',   // línea de flotación (oscura)
+    yachtHullBot:   '#334155',   // quilla / fondo del casco
   },
 
 };
