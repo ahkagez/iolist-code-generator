@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IO List Code Generator</title>
+  <title>I/O List Code Generator</title>
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -16,33 +16,34 @@
     .row { display: flex; gap: 16px; align-items: flex-start; }
     .col { flex: 1; min-width: 320px; }
     .box { border: 1px solid #ddd; border-radius: 10px; padding: 12px; }
-    textarea { width: 100%; box-sizing: border-box; font-family: Consolas, "Courier New", monospace; }
+    textarea { width: 100%; box-sizing: border-box; font-family: Consolas, "Courier New", monospace; margin: 10px 0 0 0;}
     pre { background: #f6f6f6; padding: 10px; border-radius: 8px; overflow: auto; }
     h1 { margin: 0 0 8px 0; }
     h3, h4 { margin: 10px 0 6px 0; }
     .boxHeader { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .copyBtn { padding: 6px 10px; border: 1px solid #cfcfcf; border-radius: 8px; background: #fff; cursor: pointer; }
-    .copyBtn:active { transform: translateY(1px); }
+    .copyBtn:active { border: 1px solid #afafaf; background: #aaa} <!-- transform: translateY(1px); -->
   </style>
 </head>
 
 <body>
   <div id="app">
-    <h1>IO list code generator</h1>
+    <h1>I/O list code generator</h1>
 
     <div class="topbar">
       <input type="file" @change="onFile" accept=".xlsx,.xls,.xlsm" />
-      <span class="pill">Header row (1-based): {{ headerRowNumber }}</span>
+      <span class="pill">Header row: {{ headerRowNumber }}</span>
       <span class="pill">Sheet: {{ usedSheetName || '-' }}</span>
-      <span class="pill">Tags: {{ tags.length }}</span>
-      <span class="pill">Digital alarms: {{ alarmDigitalLinesCount }}</span>
-      <span class="pill">Analog alarms: {{ alarmAnalogLinesCount }}</span>
-      <span class="muted">Requires columns: NAME, Alarm</span>
+      <span class="pill">I/Os: {{ this.controlCount || '-' }}</span>
+      <span class="pill">Digital alarms: {{ alarmDigitalLinesCount || '-' }}</span>
+      <span class="pill">Analog alarms: {{ alarmAnalogLinesCount || '-' }}</span>
+      <!--<span class="muted">Requires columns: NAME, Alarm</span>-->
     </div>
-
+	
+	<!-- IO_tags -->
     <div class="box">
       <div class="boxHeader">
-        <h3 style="margin:0;">IO_Tags (GVL)</h3>
+        <h3 style="margin:0;">IO_Tags (GVL - Hardware linked tags)</h3>
 		  <div style="display:flex; gap:8px;">
 			<button class="copyBtn" @click="copyText(tagsText, 'IO_Tags')">Copy</button>
 			<button class="copyBtn" @click="downloadXmlIO()">Create IO_Tags.xml</button>
@@ -50,8 +51,20 @@
       </div>
       <textarea v-model="tagsText" rows="10" readonly></textarea>
     </div>
+	
+	<!-- GVL -->
+	<div class="box" style="margin-top: 16px;">
+      <div class="boxHeader">
+        <h3 style="margin:0;">GVL (GVL - Internal tags)</h3>
+		  <div style="display:flex; gap:8px;">
+			<button class="copyBtn" @click="copyText(GVLtags, 'GVL_Tags')">Copy</button>
+			<button class="copyBtn" @click="downloadXmlGVL()">Create GVL.xml</button>
+		  </div>
+      </div>
+      <textarea v-model="GVLtags" rows="10" readonly></textarea>
+    </div>
 
-    <!-- Alarm_tags (single box for GVL) -->
+    <!-- Alarm_tags -->
     <div class="box" style="margin-top: 16px;">
       <div class="boxHeader">
         <h3 style="margin:0;">Alarm_tags (GVL)</h3>
@@ -60,45 +73,56 @@
 			<button class="copyBtn" @click="downloadXmlAlarm()">Create Alarm_tags.xml</button>
 	    </div>
       </div>
-      <textarea v-model="alarmTagsText" rows="16" readonly></textarea>
+      <textarea v-model="alarmTagsText" rows="10" readonly></textarea>
     </div>
-
-    <!-- TwinCAT: split in 2 boxes (Declarations + Program) -->
+	
+    <!-- Alarms POU: split in 2 boxes (Declarations + program) -->
     <div class="row" style="margin-top: 16px;">
       <div class="col box">
         <div class="boxHeader">
-          <h3 style="margin:0;">Alarms (Declarations)</h3>
+          <h3 style="margin:0;">Alarms (PRG - Declarations)</h3>
           <button class="copyBtn" @click="copyText(alarmsTwinCatDeclaration, 'Alarms Declarations')">Copy</button>
         </div>
-        <textarea v-model="alarmsTwinCatDeclaration" rows="22" readonly></textarea>
+        <textarea v-model="alarmsTwinCatDeclaration" rows="10" readonly></textarea>
       </div>
 
       <div class="col box">
         <div class="boxHeader">
-          <h3 style="margin:0;">Alarms (Program)</h3>
+          <h3 style="margin:0;">Alarms (PRG - Program)</h3>
           <button class="copyBtn" @click="copyText(alarmsTwinCatProgram, 'Alarms Program')">Copy</button>
         </div>
-        <textarea v-model="alarmsTwinCatProgram" rows="22" readonly></textarea>
+        <textarea v-model="alarmsTwinCatProgram" rows="10" readonly></textarea>
       </div>
     </div>
 	
-	<div class="box" style="margin-top: 16px">
-	  <div class="boxHeader">
-		<h3 style="margin:0">Alarms (.tmc)</h3>
-		<div style="display:flex; gap:8px">
-		  <button class="copyBtn" @click="copyText(tmcText, 'Alarms.tmc Copy')">Copy</button>
-		  <button class="copyBtn" @click="downloadTmc()">Create Alarms.tmc</button>
-		</div>
-	  </div>
-	  <textarea v-model="tmcText" rows="16" readonly></textarea>
-	</div>
-	
+	<!-- VariableScale POU (only program) -->
 	<div class="box" style="margin-top: 16px">
 	  <div class="boxHeader">
 		<h3 style="margin:0">VariableScale (Program)</h3>
 		<button class="copyBtn" @click="copyText(variableScalingProgram, 'VariableScale')">Copy</button>
 	  </div>
-	  <textarea v-model="variableScalingProgram" rows="18" readonly></textarea>
+	  <textarea v-model="variableScalingProgram" rows="10" readonly></textarea>
+	</div>
+	
+	<!-- VariableMapping POU (only program) -->
+	<div class="box" style="margin-top: 16px">
+	  <div class="boxHeader">
+		<h3 style="margin:0">VariableMapping (Program)</h3>
+		<button class="copyBtn" @click="copyText(variableMappingProgram, 'VariableMapping')">Copy</button>
+	  </div>
+	  <textarea v-model="variableMappingProgram" rows="10" readonly></textarea>
+	</div>
+	
+	<!-- Alarms.tmc file -->
+	<div class="box" style="margin-top: 16px">
+	  <div class="boxHeader">
+		<h3 style="margin:0">Alarms (.tmc file)</h3>
+		<div style="display:flex; gap:8px">
+		  <button class="copyBtn" @click="copyText(tmcText, 'Alarms.tmc Copy')">Copy</button>
+		  <button class="copyBtn" @click="downloadTmc()">Create 'Alarms.tmc'</button>
+		</div>
+	  </div>
+	  <textarea v-model="tmcText" rows="10" readonly></textarea>
 	</div>
 
     <h3 style="margin-top: 16px;">Debug</h3>
@@ -126,12 +150,14 @@
           // Outputs
           tags: [],
           tagsText: '',
+		  GVLtags: '',
           alarmDigitalText: '',
           alarmAnalogText: '',
           alarmTagsText: '',
           alarmsTwinCatDeclaration: '',
           alarmsTwinCatProgram: '',
 		  variableScalingProgram: '',
+		  variableMappingProgram: '',
           debug: '',
 		  
 		  // For Alarms.tmc
@@ -551,6 +577,11 @@ END_VAR</xhtml>
 			this.downloadTextFile(xml, 'IO_Tags.xml');
 		},
 		
+		downloadXmlGVL() {
+		  const xml = this.buildIOTagsXml(this.tplXmlGVL, this.GVLtags);
+		  this.downloadTextFile(xml, 'GVL.xml');
+		},
+		
 		downloadXmlAlarm() {
 		  const persistentST = [this.alarmDigitalText, this.alarmAnalogText]
 			.filter(Boolean)
@@ -758,6 +789,10 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
 		  const idxRawFull     = col['rawfull'];
 		  const idxScaledZero  = col['scaledzero'];
 		  const idxScaledFull  = col['scaledfull'];
+		  
+		  // Colums for GVL
+		  const idxLocation = col['location']; // opcional
+		  const idxModbusReg = col['modbus declaration'] ?? col['modbus'] ?? col['modbus reg'] ?? col['modbus register'];
 
 		  // Columns for .tmc file
 		  const idx1 = col['id1'];
@@ -799,17 +834,51 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
 			const ioTagDeclLines = [];
 			const stAiDeclLines = [];
 			const scalingLines = [];
+			let controlCount = 0;
+			
+			// GVL (internal tags)
+			const gvlLines = [];
+			const gvlLinesModbusTCP = [];	// Location = ModbusTCP
+			const gvlLinesModbus = [];		// Location = Modbus
+			const gvlErrors = [];
+			const allowedGvlTypes = new Set(['DIGITAL','BOOL','INT','UINT','DINT','SINT','USINT','DUINT','REAL','WORD','DWORD','BYTE']);
+			const normalizeGvlType = (typeRaw) => {
+			  const t = toStrTrim(typeRaw).toUpperCase();
+			  if (!t) return null;
 
-			for (const r of dataRows) {
+			  // If it contains "DIGITAL" or "BOOL", force BOOL
+			  if (t.includes('DIGITAL') || t.includes('BOOL')) return 'BOOL';
+
+			  // Otherwise accept only strict allowed types
+			  return allowedGvlTypes.has(t) ? t : null;
+			};
+			
+			// SubSystem internal lines (unique)
+			const subSystemMap = new Map(); // key: SubSystem_<identifier>, value: raw text
+
+			// ST string escape: ' -> ''
+			const stEscape = (s) => String(s ?? '').replace(/'/g, "''");
+
+			for (const [i, r] of dataRows.entries()) {
 			  const controlCell = (idxControl !== undefined) ? toStrTrim(r[idxControl]) : '';
 			  const isControl = (controlCell.trim().toLowerCase() === 'x');
 
 			  const hmiCell = (idxHMI !== undefined) ? toStrTrim(r[idxHMI]) : '';
 			  const isHmi = (hmiCell.trim().toLowerCase() === 'x');
+			  
+			  // Collect SubSystem from ALL rows
+			  const subSystemRaw = (idxSubSystem !== undefined) ? toStrTrim(r[idxSubSystem]) : '';
+			  if (subSystemRaw) {
+			    const varName = `SubSystem_${toIdentifier(subSystemRaw)}`;
+			    if (!subSystemMap.has(varName)) subSystemMap.set(varName, subSystemRaw);
+			  }
 
 			  // Process rows that are either Control or HMI.
 			  if (!isControl && !isHmi) continue;
-
+			  
+			  // Count only Control rows
+			  if (isControl) controlCount++;
+			  
 			  const tag = toStrTrim(r[idxNAME]);
 			  if (!tag) continue;
 
@@ -826,42 +895,91 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
 			  const comment = (idxComment !== undefined) ? toStrTrim(r[idxComment]) : '';
 			  const commentSuffix = comment ? ` // ${comment}` : '';
 
-			  // Base IO_Tags declarations (kept together).
+			  // Base IO_Tags declarations.
 			  if (hwDecl) ioTagDeclLines.push(hwDecl);
 			  ioTagDeclLines.push(`${tag} ${atDecl};${commentSuffix}`);
 
-			  // HMI-related declarations and scaling program (kept together, but stored separately).
-			  if (isHmi) {
+			  // HMI-related declarations and scaling program (stored separately).
+			  if (isHmi && !isControl) {
 				const stVar = `st_${tag}`;
 
 				const rawZero    = fmtNumberOrRaw((idxRawZero    !== undefined) ? r[idxRawZero]    : null, 0);
 				const rawFull    = fmtNumberOrRaw((idxRawFull    !== undefined) ? r[idxRawFull]    : null, 0);
 				const scaledZero = fmtNumberOrRaw((idxScaledZero !== undefined) ? r[idxScaledZero] : null, 0);
 				const scaledFull = fmtNumberOrRaw((idxScaledFull !== undefined) ? r[idxScaledFull] : null, 0);
-
-				stAiDeclLines.push(
-				  `${stVar}: ST_AI := (RawZero:=${rawZero}, RawFull:=${rawFull}, ScaledZero:=${scaledZero}, ScaledFull:=${scaledFull});`
-				);
-
+  
+				stAiDeclLines.push(`${stVar}: ST_AI := (RawZero:=${rawZero}, RawFull:=${rawFull}, ScaledZero:=${scaledZero}, ScaledFull:=${scaledFull});`);
 				scalingLines.push(`${stVar}.Raw := ${tag}; ${stVar}.Scaled := FAiScale(${stVar});`);
+				
+				// GVL (internal tags)
+				const typeRaw = (idxTYPE !== undefined) ? toStrTrim(r[idxTYPE]) : '';
+				const gvlType = normalizeGvlType(typeRaw);
+				
+				const locationRaw = (idxLocation !== undefined) ? toStrTrim(r[idxLocation]) : '';
+			    const locationLower = locationRaw.toLowerCase();
+			    const isModbusTCP = locationLower.includes('modbustcp');
+				const isModbus = !isModbusTCP && locationLower.includes('modbus');
+				
+				if (!gvlType) {
+			  	const excelRow = startDataIndex + 1 + i; // 1-based Excel row number
+			  	  gvlErrors.push(`Row ${excelRow}: invalid TYPE '${typeRaw}' for HMI tag '${tag}'`);
+			    } else {
+			  	const cmt = comment || '';
+				  if (isModbusTCP) gvlLinesModbusTCP.push(`${tag}: ${gvlType} ;       //${cmt}`);
+				  if (isModbus) gvlLinesModbus.push(`${tag}: ${gvlType} ;       //${cmt}`);
+			  	  else gvlLines.push(`${tag}: ${gvlType} ;       //${cmt}`);
+			    }
 			  }
 			producedTags.add(tag);
+			this.controlCount = controlCount;
 			}
-
+				
+			
 			// Final formatting: first IO tags, then ST_AI instances.
-			const separator = (stAiDeclLines.length > 0) ? '\n\n' : '';
+			const separator = (stAiDeclLines.length > 0) ? '\n' : '';
 			this.tagsText = 
 			`{attribute 'global_init_slot' := '40500'}\n` +
 			`VAR_GLOBAL\n` +
-			`//IO tags\n` +
+			`{region "I/O Tags"}	// I/O hardware linked tags\n` +
 			ioTagDeclLines.join('\n') + separator + 
-			`//Analog tag scalings\n` +
-			stAiDeclLines.join('\n') +
-			`\nEND_VAR`
+			`{endregion}\n\n` +
+			`{region "Scaling"}		// Analog tags scalings\n` +
+			stAiDeclLines.join('\n') + `\n` +
+			`{endregion}\n\n` +
+			`END_VAR`
 			
 			this.variableScalingProgram = scalingLines.join('\n').trim();
-			
+	
 			this.tags = [...producedTags];
+			
+			// GVL (internal tags)
+			const internalLines = Array.from(subSystemMap.entries())
+			  .sort(([a], [b]) => a.localeCompare(b))
+			  .map(([varName, raw]) => `${varName}: FB_TcSourceInfo:= (sName:='${stEscape(raw)}');`);
+  
+			const sections = [
+			  `VAR_GLOBAL`,
+			  `// Internal tags\n${gvlLines.join('\n')}`,
+
+			  // Only if Location = ModbusTCP
+			  gvlLinesModbusTCP.length
+				? `// ModbusTCP tags\n${gvlLinesModbusTCP.join('\n')}`
+				: '',
+
+			  // Only if Location = Modbus
+			  gvlLinesModbus.length
+				? `// Modbus tags\n${gvlLinesModbus.join('\n')}`
+				: '',
+
+			  `// Sub systems\n${internalLines.join('\n')}`,
+			  `END_VAR`
+			];
+
+			this.GVLtags = sections.filter(Boolean).join('\n\n');
+
+			if (gvlErrors.length) {
+			  this.debug = (this.debug ? (this.debug + '\n') : '') + 'GVL TYPE errors:\n' + gvlErrors.join('\n');
+			}
 
 
           // Alarm_tags
@@ -875,8 +993,11 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
           const eventDeclAnalog = [];
 
           // TwinCAT Program
-          const programFbLines = [];
-          const programCreateExLines = [];
+		  const programFbLinesDigital = [];
+		  const programFbLinesAnalog  = [];
+		  
+		  const programCreateExLinesDigital = [];
+		  const programCreateExLinesAnalog  = [];
 
           const typeErrors = [];
 		  let maxID = null;
@@ -950,8 +1071,6 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
 			  const alarmConfigL  = enToConfig(idxAlarmConfigL !== undefined ? r[idxAlarmConfigL] : '', alarmConfig);
 			  const alarmConfigH  = enToConfig(idxAlarmConfigH !== undefined ? r[idxAlarmConfigH] : '', alarmConfig);
 			  const alarmConfigHH = enToConfig(idxAlarmConfigHH !== undefined ? r[idxAlarmConfigHH] : '', alarmConfig);
-			  const condRaw = (idxCondition !== undefined) ? toStrTrim(r[idxCondition]) : '';
-			  const bCondition = condRaw ? condRaw : '1';
 			  
 			  // .tmc
 			  const id1 = (idx1 !== undefined) ? toStrTrim(r[idx1]) : '';
@@ -968,7 +1087,6 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
                 `st_al_${tag}: ST_ALARM_AI := (` +
                   `ID:=${ida}, ` +
                   `TAG:='${tag}', ` +
-                  `bCondition:=${bCondition}, ` +
 				  `ScaledMax:=st_${tag}.ScaledFull, ` +
                   `TagInfo:='${almName}', ` +
                   `AlarmConfigLL:=${alarmConfigLL}, AlarmConfigL:=${alarmConfigL}, AlarmConfigH:=${alarmConfigH}, AlarmConfigHH:=${alarmConfigHH}, ` +
@@ -1002,35 +1120,37 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
 
             const subSystemRaw = (idxSubSystem !== undefined) ? toStrTrim(r[idxSubSystem]) : '';
             const subSystemExpr = subSystemRaw ? `SubSystem_${toIdentifier(subSystemRaw)}` : '0';
-
+			const condRaw = (idxCondition !== undefined) ? toStrTrim(r[idxCondition]) : '';
+			const bCondition = condRaw ? condRaw : 'True';
+			
             if (isDigital) {
               const varExpr = isInverted ? `NOT ${tag}` : `${tag}`;
 
-              programFbLines.push(
+              programFbLinesDigital.push(
                 `fb_${tag}(i_bVariable:=${varExpr}, i_bConfig:=bAlarmSetupActive, ST_Variable:=st_al_${tag}, FB_Alarm:=Event_${tag});`
               );
 
-              programCreateExLines.push(
+              programCreateExLinesDigital.push(
                 `Event_${tag}.CreateEx(TC_Events.AlarmClass.Event_${tag}, TRUE, ${subSystemExpr});`
               );
             }
 
             if (isAnalog) {
-              programFbLines.push(
-                `fb_${tag}(i_nVariable:=st_${tag}.Scaled, i_bConfig:=bAlarmSetupActive, ST_Variable:=st_al_${tag}, ` +
+              programFbLinesAnalog.push(
+                `fb_${tag}(i_nVariable:=st_${tag}.Scaled, i_bCondition:=${bCondition}, i_bConfig:=bAlarmSetupActive, ST_Variable:=st_al_${tag}, ` +
                 `FB_LowAlarm:=EventL_${tag}, FB_LowLowAlarm:=EventLL_${tag}, FB_HighAlarm:=EventH_${tag}, FB_HighHighAlarm:=EventHH_${tag});`
               );
 
-              programCreateExLines.push(
+              programCreateExLinesAnalog.push(
                 `EventL_${tag}.CreateEx(TC_Events.AlarmClass.EventL_${tag}, TRUE, ${subSystemExpr});`
               );
-              programCreateExLines.push(
+              programCreateExLinesAnalog.push(
                 `EventLL_${tag}.CreateEx(TC_Events.AlarmClass.EventLL_${tag}, TRUE, ${subSystemExpr});`
               );
-              programCreateExLines.push(
+              programCreateExLinesAnalog.push(
                 `EventH_${tag}.CreateEx(TC_Events.AlarmClass.EventH_${tag}, TRUE, ${subSystemExpr});`
               );
-              programCreateExLines.push(
+              programCreateExLinesAnalog.push(
                 `EventHH_${tag}.CreateEx(TC_Events.AlarmClass.EventHH_${tag}, TRUE, ${subSystemExpr});`
               );
             }
@@ -1063,33 +1183,40 @@ buildAlarmTagsXml(templateXml, persistentST, maxID, maxIDA) {
           this.alarmTagsText =
 `{attribute 'global_init_slot' := '40502'}
 VAR_GLOBAL PERSISTENT
-${this.alarmDigitalText || ''}${(this.alarmDigitalText && this.alarmAnalogText) ? '\n\n' : ''}${this.alarmAnalogText || ''}
+{region "Digital alarms"}	// Digital alarms structure declaration from I/O list
+${this.alarmDigitalText || ''}${(this.alarmDigitalText && this.alarmAnalogText) ? '\n' : ''}
+{endregion}\n
+{region "Analog alarms"}	// Analog alarms structure declaration from I/O list
+${this.alarmAnalogText || ''}
+{endregion}\n
 END_VAR
 
 VAR_GLOBAL CONSTANT
-///Digital alarm array size
-ArrMinD: INT := 1;
-ArrMaxD: INT := ${maxID ?? '-' };
-///Analog alarm array size
-ArrMinA: INT := 1;
-ArrMaxA: INT := ${maxIDA ?? '-' };
+//Digital alarm array size
+	ArrMinD: INT := 1;
+	ArrMaxD: INT := ${maxID ?? '-' };
+//Analog alarm array size
+	ArrMinA: INT := 1;
+	ArrMaxA: INT := ${maxIDA ?? '-' };
 END_VAR
 
 VAR_GLOBAL
-///Array needs to be at least as big as the highest digital struct ID
-Arr_AlarmDigital: ARRAY[ArrMinD..ArrMaxD] OF ST_ALARM_DI;
-///Array needs to be at least as big as the highest analog struct ID
-Arr_AlarmAnalog: ARRAY[ArrMinA..ArrMaxA] OF ST_ALARM_AI;
+//Array needs to be at least as big as the highest digital struct ID
+	Arr_AlarmDigital: ARRAY[ArrMinD..ArrMaxD] OF ST_ALARM_DI;
+//Array needs to be at least as big as the highest analog struct ID
+	Arr_AlarmAnalog: ARRAY[ArrMinA..ArrMaxA] OF ST_ALARM_AI;
 END_VAR`.trim() + '\n';
 
           // TwinCAT declarations
           this.alarmsTwinCatDeclaration =
 `PROGRAM Alarms
 VAR
+{region "Alarms FB declarations"}	// Digital + analog
 ${fbDeclDigital.join('\n')}${fbDeclDigital.length ? '\n' : ''}${fbDeclAnalog.join('\n')}
-
+{endregion}\n
+{region "Events declaration"}		// Digital + analog
 ${eventDeclDigital.join('\n')}${eventDeclDigital.length ? '\n' : ''}${eventDeclAnalog.join('\n')}
-
+{endregion}\n
 //Other tags	
 	fbEventlogger: FB_TcEventLogger;
 	bSilence: BOOL;
@@ -1112,21 +1239,80 @@ ${eventDeclDigital.join('\n')}${eventDeclDigital.length ? '\n' : ''}${eventDeclA
 END_VAR`.trim() + '\n';
 
           // TwinCAT program
-          const createExIndented = programCreateExLines.map(l => `    ${l}`).join('\n');
+            const createExIndented = [
+		    programCreateExLinesDigital.map(l => l).join('\n'),
+		    programCreateExLinesAnalog.map(l => l).join('\n')
+		  ].filter(s => (s ?? '').trim().length).join('\n\n');
+		  
+		  const programFbLinesOrdered = [
+		    programFbLinesDigital.join('\n'),
+		    programFbLinesAnalog.join('\n')
+		  ].filter(s => (s ?? '').trim().length).join('\n\n');
 
           this.alarmsTwinCatProgram =
 `{attribute 'global_init_slot' := '40503'}
 IF NOT bIsInitalized THEN
     bIsInitalized := TRUE;
-{region "Events"}	// Digital events
 ${createExIndented}
-{endregion}
 END_IF
 
 {region "Alarms"}	// Alarm functions
-${programFbLines.join('\n')}
+${programFbLinesOrdered}
 {endregion}
-`.trim() + '\n';
+
+IF bConfirmAll THEN
+	bConfirmAll := FALSE;
+	fbEventLogger.ConfirmAllAlarms(0);
+	fbSRLight(RESET1 := TRUE);
+ELSE
+	fbSRLight(RESET1 := FALSE);	
+END_IF
+
+FOR i := ArrMinD TO ArrMaxD-1 BY 1 DO  // Buzzer activation for digital alarms
+	IF Arr_AlarmDigital[i].AlarmRaised THEN
+		o_bBuzzerD := 1;
+	END_IF
+	IF Arr_AlarmDigital[i].AlarmActive THEN
+		o_bAlarmLightD := 1;
+		bTemp :=1;
+	END_IF
+END_FOR
+
+FOR i := ArrMinA TO ArrMaxA-1 BY 1 DO	// Buzzer activation for analog alarms
+	IF Arr_AlarmAnalog[i].AlarmRaised THEN
+		o_bBuzzerA := 1;
+	END_IF
+END_FOR
+
+IF bSilence THEN	//silence of buzzers
+	bSilence := 0;
+	o_bBuzzerD := 0;
+	o_bBuzzerA := 0;
+END_IF
+
+IF ((o_bBuzzerD OR o_bBuzzerA) THEN		// Buzzer activation at ¿?
+	// Add buzzers here = 1;
+ELSE
+	// Add buzzers here = 0;
+END_IF
+
+IF (o_bBuzzerD OR o_bBuzzerA) THEN 		// Alarm light SET
+	fbTRIGLight(CLK:=TRUE);
+	fbSRLight(SET := fbTRIGLight.Q);
+ELSE
+	fbSRLight(SET := FALSE); 
+	fbTRIGLight(CLK:=FALSE);
+END_IF
+
+bTemp :=0;
+bTempA :=0;
+
+//alarm light output
+IF fbSRLight.Q1 THEN
+	// Add light *_DO here = 1;
+ELSE
+	// Add light *_DO here = 0;
+END_IF`.trim() + '\n';
 
 		  // .tmc file generation
 		  this.tmcText =
@@ -1144,12 +1330,13 @@ ${programFbLines.join('\n')}
           must('sub system', 'Sub system (optional, for CreateEx)');
 
           this.debug =
-            `Header row used: ${headerRowIndex + 1}\n` +
+            //`Header row used: ${headerRowIndex + 1}\n` +
             `Data start row: ${startDataIndex + 1}\n` +
-            `Total tags: ${this.tags.length}\n` +
+			`Total IOs (control column): ${this.controlCount}\n` +
+            //`Total tags: ${this.tags.length}\n` +
             `Digital alarms: ${maxID}\n` +
             `Analog alarms: ${maxIDA}\n`;
-            //`PROGRAM FB calls: ${programFbLines.length}\n` +
+            //`PROGRAM FB calls: ${programFbLinesOrdered.length}\n` +
             //`PROGRAM CreateEx calls: ${programCreateExLines.length}\n` +
             //`Missing optional columns (if any): ${missing.length ? missing.join(', ') : 'none'}\n`;
         }
