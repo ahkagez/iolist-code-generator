@@ -1,0 +1,29 @@
+[
+  {
+    "id": "e1",
+    "name": "Carlos",
+    "surname": "Martínez",
+    "base_location": "Oficina",
+    "current_location": "loc_1",
+    "description": "Capitán de guardia",
+    "color": "#00b4d8"
+  },
+  {
+    "id": "e2",
+    "name": "Laura",
+    "surname": "Gómez",
+    "base_location": "Oficina",
+    "current_location": "b1",
+    "description": null,
+    "color": "#f4a261"
+  },
+  {
+    "id": "e3",
+    "name": "Marcos",
+    "surname": "Puig",
+    "base_location": "Taller",
+    "current_location": "loc_2",
+    "description": "Mecánico naval",
+    "color": "#2dc653"
+  }
+]
