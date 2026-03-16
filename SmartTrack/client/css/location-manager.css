@@ -1,0 +1,480 @@
+/* ─── Botón navbar central ──────────────────────────────── */
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    display: flex;
+    gap: 8px;
+}
+
+.nav-locations-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+}
+
+.nav-locations-btn:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+}
+
+.nav-locations-btn.active {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.55);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+}
+
+/* ─── Panel lateral ─────────────────────────────────────── */
+.lm-panel {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0;
+    width: 380px;
+    height: calc(100vh - var(--navbar-height));
+    background: white;
+    box-shadow: -4px 0 28px rgba(0,0,0,0.13), -1px 0 0 rgba(0,0,0,0.05);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lm-panel--open {
+    transform: translateX(0);
+}
+
+/* ─── Header ────────────────────────────────────────────── */
+.lm-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f1f3;
+    flex-shrink: 0;
+    background: #fafbfc;
+}
+
+.lm-back-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 2px 6px 2px 2px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+}
+.lm-back-btn:hover { color: #124C8C; background: #eff6ff; }
+
+.lm-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lm-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.lm-btn-new {
+    background: #124C8C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 13px;
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+.lm-btn-new:hover { background: #0e3d73; }
+
+.lm-close-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+}
+.lm-close-btn:hover { color: #374151; background: #f3f4f6; }
+
+/* ─── Views ─────────────────────────────────────────────── */
+.lm-view {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ─── Lista de ubicaciones ──────────────────────────────── */
+.lm-list {
+    padding: 8px;
+}
+
+.lm-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background 0.12s;
+}
+.lm-item:hover { background: #f8f9fb; }
+
+.lm-item-marker {
+    width: 34px;
+    height: 34px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 13px;
+    border: 2px solid rgba(255,255,255,0.8);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+.lm-item-marker span {
+    transform: rotate(45deg);
+    display: block;
+    color: white;
+    line-height: 1;
+}
+
+.lm-item-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.lm-item-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lm-item-meta {
+    font-size: 11.5px;
+    color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lm-item-actions {
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.12s;
+    flex-shrink: 0;
+}
+.lm-item:hover .lm-item-actions { opacity: 1; }
+
+.lm-icon-btn {
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+    transition: background 0.12s, color 0.12s;
+}
+.lm-icon-btn--edit:hover   { background: #eff6ff; color: #124C8C; }
+.lm-icon-btn--delete:hover { background: #fef2f2; color: #dc2626; }
+
+/* ─── Estado vacío / error ──────────────────────────────── */
+.lm-loading, .lm-empty, .lm-error {
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #9ca3af;
+    line-height: 1.6;
+}
+.lm-error { color: #dc2626; }
+
+/* ─── Formulario ────────────────────────────────────────── */
+.lm-form {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.lm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.lm-field-group {
+    display: flex;
+    gap: 10px;
+}
+
+.lm-field--half { flex: 1; }
+
+.lm-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+    letter-spacing: 0.1px;
+}
+
+.lm-input {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    color: #111827;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.lm-input:focus {
+    outline: none;
+    border-color: #124C8C;
+    box-shadow: 0 0 0 3px rgba(18,76,140,0.1);
+}
+.lm-input::placeholder { color: #c4c9d4; }
+
+.lm-textarea {
+    resize: vertical;
+    min-height: 56px;
+}
+
+/* ─── Botones de coordenadas ────────────────────────────── */
+.lm-coord-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.lm-btn-coord {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.lm-btn-coord:hover {
+    background: #eff6ff;
+    border-color: #124C8C;
+    color: #124C8C;
+}
+
+/* ─── Sección barco ─────────────────────────────────────── */
+.lm-divider {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #9ca3af;
+    padding: 6px 0 8px;
+    border-top: 1px solid #f0f1f3;
+}
+
+/* ─── Acciones formulario ───────────────────────────────── */
+.lm-form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.lm-btn {
+    flex: 1;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s, opacity 0.15s;
+}
+.lm-btn--primary            { background: #124C8C; color: white; }
+.lm-btn--primary:hover      { background: #0e3d73; }
+.lm-btn--primary:disabled   { opacity: 0.6; cursor: not-allowed; }
+.lm-btn--secondary          { background: #f3f4f6; color: #374151; }
+.lm-btn--secondary:hover    { background: #e5e7eb; }
+
+.lm-form-error {
+    font-size: 12.5px;
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+/* ─── Utilidades ────────────────────────────────────────── */
+.lm-hidden { display: none !important; }
+
+/* ─── Modal de confirmación ─────────────────────────────── */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+}
+
+.confirm-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.confirm-dialog {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.1);
+    padding: 26px 26px 20px;
+    width: 340px;
+    max-width: calc(100vw - 40px);
+    transform: scale(0.93) translateY(10px);
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.confirm-overlay.visible .confirm-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.confirm-icon {
+    width: 42px;
+    height: 42px;
+    background: #fef2f2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 13px;
+    color: #dc2626;
+}
+
+.confirm-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 7px;
+}
+
+.confirm-message {
+    font-size: 13.5px;
+    color: #6b7280;
+    line-height: 1.55;
+    margin-bottom: 22px;
+}
+
+.confirm-name {
+    font-weight: 600;
+    color: #374151;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 9px;
+    justify-content: flex-end;
+}
+
+.confirm-btn {
+    padding: 8px 18px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+}
+
+.confirm-btn--cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+.confirm-btn--cancel:hover { background: #e5e7eb; }
+
+.confirm-btn--danger {
+    background: #dc2626;
+    color: white;
+}
+.confirm-btn--danger:hover { background: #b91c1c; }
+
+/* ─── Pick mode (cursor + barra de ayuda) ───────────────── */
+.map--pick-mode,
+.map--pick-mode .leaflet-container {
+    cursor: crosshair !important;
+}
+
+.lm-pick-bar {
+    position: fixed;
+    top: calc(var(--navbar-height) + 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18, 76, 140, 0.93);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 22px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 600;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.22);
+    pointer-events: none;
+    white-space: nowrap;
+    display: none;
+}
+.lm-pick-bar.visible { display: block; }

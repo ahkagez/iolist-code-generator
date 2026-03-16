@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTrack - Seguimiento en Vivo</title>
+    <!-- ── Guardia de sesión: redirige a login si no hay token ── -->
+    <script>
+        (function () {
+            try {
+                if (!JSON.parse(localStorage.getItem('auth_token'))) {
+                    window.location.replace('login.html');
+                }
+            } catch (e) {
+                window.location.replace('login.html');
+            }
+        })();
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css"> <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/location-manager.css">
+    <link rel="stylesheet" href="css/user-manager.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="navbar-brand">
+            <img src="assets/img/baltic-yacht-logo.png" alt="Logo" class="nav-logo">
+            <span class="nav-separator">|</span>
+            <span class="nav-title">SmartTrack</span>
+        </div>
+
+        <!-- Botones centrales -->
+        <div class="nav-center">
+            <button class="nav-locations-btn" id="lm-nav-btn">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                Gestión de Ubicaciones
+            </button>
+            <button class="nav-users-btn" id="um-nav-btn">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                </svg>
+                Gestión de Usuarios
+            </button>
+        </div>
+
+        <div class="navbar-controls">
+            <select class="nav-lang-switch" id="lang-switch">
+                <option value="1">ES</option>
+                <option value="2">EN</option>
+                <option value="3">FI</option>
+            </select>
+
+            <div class="user-menu" id="userMenu">
+
+                <!-- Capa compacta (estado cerrado) -->
+                <div class="um-trigger">
+                    <div class="user-info">
+                        <span class="user-name">Jordi Bosch</span>
+                        <span class="user-role">Administrador</span>
+                    </div>
+                    <div class="user-avatar">JB</div>
+                    <span class="user-chevron">▾</span>
+                </div>
+
+                <!-- Capa expandida en navbar (estado abierto) -->
+                <div class="um-profile">
+                    <div class="um-profile-avatar">JB</div>
+                    <div class="um-profile-info">
+                        <span class="um-profile-name">Jordi Bosch Ciejka</span>
+                        <span class="um-profile-email">jordi.bosch@maritime.com</span>
+                        <span class="um-profile-badge">Administrador</span>
+                    </div>
+                    <span class="um-close-btn" title="Cerrar">✕</span>
+                </div>
+
+                <!-- Items del dropdown (debajo del navbar) -->
+                <div class="dropdown-menu" id="userDropdown">
+                    <div class="dropdown-items">
+                        <a href="#" class="dropdown-item">
+                            <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+                            <span data-i18n="profile_manage">Gestionar Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                            <span data-i18n="profile_password">Cambiar Contraseña</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="btn-logout" class="dropdown-item text-danger">
+                            <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h7a1 1 0 000-2H4V5h6a1 1 0 000-2H3zm11.293 4.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L15.586 11H9a1 1 0 010-2h6.586l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                            <span data-i18n="profile_logout">Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3 data-i18n="sidebar_title">Estado del Equipo</h3>
+                <input type="text" class="search-input" placeholder="Buscar empleado..." data-i18n="search_ph">
+            </div>
+
+            <div class="sidebar-content"></div>
+        </aside>
+
+        <main class="map-area">
+            <div id="map-container">
+                <div class="map-placeholder">
+                    <span>Cargando mapa interactivo...</span>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Dependencias compartidas -->
+    <script src="js/services/CacheService.js"></script>
+    <script src="js/config/constants.js"></script>
+    <script src="js/services/ApiClient.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/utils/dictionary.js"></script>
+    <script src="js/utils/I18nService.js"></script>
+
+    <!-- Controladores de página -->
+    <script src="js/controllers/SidebarController.js"></script>
+    <script src="js/controllers/MapController.js"></script>
+    <script src="js/controllers/LocationManagerController.js"></script>
+    <script src="js/controllers/UserManagerController.js"></script>
+
+    <script>
+        // ── Idioma ──────────────────────────────────────────
+        const i18n       = new I18nService(Diccionarios.index);
+        const langSwitch = document.getElementById('lang-switch');
+        const savedLang  = CacheService.obtenerIdioma();
+
+        langSwitch.value = savedLang;
+        i18n.aplicarTraducciones(savedLang);
+
+        langSwitch.addEventListener('change', function () {
+            const lang = this.value;
+            CacheService.guardarIdioma(lang);
+            i18n.aplicarTraducciones(lang);
+            document.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
+            if (window._mapController) window._mapController.refreshLabels();
+        });
+
+        // ── Inicializar controladores ───────────────────────
+        new SidebarController();
+        window._mapController   = new MapController('map-container');
+        window._locationManager = new LocationManagerController(window._mapController);
+        window._userManager     = new UserManagerController();
+    </script>
+
+    <script>
+        const userMenu   = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        const EXPANDED_W = 260; // px — debe coincidir con el width del dropdown
+
+        let collapsedWidth = null;
+        let isAnimating    = false;
+
+        function openMenu() {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            // 1. Capturar el ancho natural actual
+            collapsedWidth = userMenu.offsetWidth;
+
+            // 2. Fijar ese ancho explícitamente (para que la transición CSS tenga punto de partida)
+            userMenu.style.width = collapsedWidth + 'px';
+
+            // 3. Forzar reflow para que el navegador registre el valor inicial
+            void userMenu.offsetWidth;
+
+            // 4. Expandir
+            userMenu.style.width = EXPANDED_W + 'px';
+            userMenu.classList.add('open');
+            userDropdown.classList.add('open');
+
+            userMenu.addEventListener('transitionend', function handler(e) {
+                if (e.propertyName === 'width') {
+                    isAnimating = false;
+                    userMenu.removeEventListener('transitionend', handler);
+                }
+            });
+        }
+
+        function closeMenu() {
+            if (isAnimating || !userDropdown.classList.contains('open')) return;
+            isAnimating = true;
+
+            // Ocultar dropdown inmediatamente al cerrar
+            userDropdown.classList.remove('open');
+            userMenu.classList.remove('open');
+
+            // Animar de vuelta al ancho original
+            userMenu.style.width = (collapsedWidth || '') + 'px';
+
+            userMenu.addEventListener('transitionend', function handler(e) {
+                if (e.propertyName === 'width') {
+                    // Liberar el ancho inline para que vuelva a ser dinámico
+                    userMenu.style.width = '';
+                    collapsedWidth = null;
+                    isAnimating = false;
+                    userMenu.removeEventListener('transitionend', handler);
+                }
+            });
+        }
+
+        userMenu.addEventListener('click', function (e) {
+            e.stopPropagation();
+            userDropdown.classList.contains('open') ? closeMenu() : openMenu();
+        });
+
+        document.addEventListener('click', closeMenu);
+    </script>
+
+    <script>
+        // ── Poblar datos de usuario en la barra superior ────
+        (function () {
+            const ROL_LABELS = { admin: 'Administrador', supervisor: 'Supervisor', operador: 'Operador' };
+            const usuario = AuthService.getUsuario();
+            if (usuario) {
+                const words    = (usuario.nombre || '').split(' ').filter(Boolean);
+                const initials = words.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+
+                document.querySelector('.user-name').textContent          = usuario.nombre  || '';
+                document.querySelector('.user-role').textContent          = ROL_LABELS[usuario.rol] || usuario.rol || '';
+                document.querySelector('.user-avatar').textContent        = initials;
+                document.querySelector('.um-profile-avatar').textContent  = initials;
+                document.querySelector('.um-profile-name').textContent    = usuario.nombre  || '';
+                document.querySelector('.um-profile-email').textContent   = usuario.email   || '';
+                document.querySelector('.um-profile-badge').textContent   = ROL_LABELS[usuario.rol] || usuario.rol || '';
+            }
+        })();
+
+        // ── Logout ──────────────────────────────────────────
+        document.getElementById('btn-logout').addEventListener('click', async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            await AuthService.logout();
+            window.location.replace('login.html');
+        });
+    </script>
+</body>
+</html>

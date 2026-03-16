@@ -1,0 +1,300 @@
+/* --- ESTILOS GENERALES Y RESET --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f6f8fc;
+    color: #1a1a1a;
+    /* Cambiamos height fijo por min-height para evitar cortes */
+    min-height: 100vh;
+    display: flex;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.page-wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh; /* Permite adaptarse a cualquier ratio de aspecto */
+}
+
+/* =========================================
+   SECCIÓN IZQUIERDA (IMAGEN Y MARCA)
+   ========================================= */
+.brand-section {
+    position: relative;
+    flex: 1; /* Ocupa el 50% de forma fluida */
+    background-image: url('../assets/img/bg-login.jpg'); 
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Padding fluido: mínimo 20px, ideal 5% de la pantalla, máximo 60px */
+    padding: clamp(20px, 5vw, 60px); 
+}
+
+/* EFECTO: Superposición con la paleta de Baltic Yachts */
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(18, 76, 140, 0.9) 0%, rgba(27, 117, 188, 0.7) 100%);
+    z-index: 1;
+}
+
+/* Contenido sobre la imagen */
+.brand-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Título SmartTrack (Fluido y adaptable) */
+.logo-placeholder {
+    /* El tamaño de fuente escala suavemente según la pantalla */
+    font-size: clamp(42px, 4vw, 86px); 
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 1.5vw, 15px);
+}
+
+.logo-icon {
+    color: #0091ff; /* Azul de Acento */
+}
+
+/* Logo de la empresa cliente (Baltic Yachts) */
+.enterprise-logo {
+    position: absolute;
+    /* Posición y tamaño que se encogen en pantallas pequeñas automáticamente */
+    top: clamp(20px, 4vh, 40px);
+    left: clamp(20px, 4vw, 40px);
+    width: clamp(120px, 15vw, 200px); 
+    height: auto;
+    z-index: 3; 
+    opacity: 0.9; 
+}
+
+/* =========================================
+   SECCIÓN DERECHA (FORMULARIO)
+   ========================================= */
+.form-section {
+    flex: 1; 
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(20px, 5vw, 60px);
+    /* CLAVE PARA MONITORES DE BAJA RESOLUCIÓN O HORIZONTALES */
+    max-height: 100vh;
+    overflow-y: auto; /* Permite hacer scroll solo aquí si la pantalla es bajita */
+}
+
+.login-card {
+    width: 100%;
+    /* Escala proporcionalmente: ~420px en 1080p, ~560px en 1440p, ~720px en 4K */
+    max-width: clamp(380px, 22vw, 720px);
+    margin: auto; /* Mantiene el centro al hacer scroll */
+}
+
+/* Cabecera del formulario */
+.form-header {
+    margin-bottom: clamp(24px, 3vh, 48px);
+}
+
+.form-header h2 {
+    font-size: clamp(24px, 2.5vw, 42px); /* Título de form fluido */
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: clamp(6px, 0.8vh, 14px);
+}
+
+.form-header p {
+    color: #6c757d;
+    font-size: clamp(14px, 1.1vw, 20px);
+}
+
+/* Grupos de entrada */
+.input-group {
+    margin-bottom: clamp(18px, 2.2vh, 36px);
+}
+
+.input-group label {
+    display: block;
+    font-size: clamp(12px, 1vw, 18px);
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: clamp(6px, 0.7vh, 12px);
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(6px, 0.7vh, 12px);
+}
+
+.label-row label {
+    margin-bottom: 0;
+}
+
+/* Inputs profesionales */
+.input-group input {
+    width: 100%;
+    padding: clamp(10px, 1.2vh, 20px) clamp(12px, 1.2vw, 22px);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: clamp(14px, 1.1vw, 20px);
+    background-color: #fbfcfd;
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+    border-color: #124C8C; /* Azul Corporativo */
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(18, 76, 140, 0.15);
+}
+
+/* Enlaces */
+.forgot-password {
+    font-size: clamp(12px, 1vw, 18px);
+    color: #1B75BC; /* Azul de Acento */
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #124C8C; 
+    text-decoration: underline;
+}
+
+/* Botón Iniciar Sesión */
+.btn-login {
+    width: 100%;
+    padding: clamp(12px, 1.5vh, 24px);
+    background-color: #124C8C; /* Azul Marino Corporativo Principal */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: clamp(14px, 1.1vw, 20px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    margin-bottom: clamp(18px, 2.2vh, 36px);
+}
+
+.btn-login:hover {
+    background-color: #1B75BC; /* Cambia al azul más claro (Acento) */
+    box-shadow: 0 6px 15px rgba(27, 117, 188, 0.4); 
+    transform: translateY(-2px); 
+}
+
+.btn-login:active {
+    transform: translateY(1px); 
+    box-shadow: 0 2px 5px rgba(27, 117, 188, 0.4);
+}
+
+/* =============== SELECTOR DE IDIOMA =============== */
+.form-section {
+    position: relative;
+}
+
+.language-selector {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+}
+
+#lang-switch {
+    padding: clamp(6px, 0.7vh, 12px) clamp(10px, 1vw, 18px);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background-color: #fbfcfd;
+    color: #495057;
+    font-size: clamp(12px, 1vw, 18px);
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#lang-switch:focus, #lang-switch:hover {
+    border-color: #124C8C;
+    background-color: #ffffff;
+}
+
+/* =============== TOGGLE CONTRASEÑA =============== */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: clamp(40px, 4vw, 56px);
+}
+
+.password-toggle {
+    position: absolute;
+    right: clamp(10px, 1vw, 16px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.password-toggle:hover {
+    color: #124C8C;
+}
+
+.password-toggle svg {
+    width: clamp(16px, 1.4vw, 22px);
+    height: clamp(16px, 1.4vw, 22px);
+    pointer-events: none;
+}
+
+@media (max-width: 992px) {
+    .page-wrapper {
+        flex-direction: column;
+        height: auto; 
+    }
+
+    .brand-section {
+        flex: none;
+        min-height: 35vh; 
+        padding: 40px 20px;
+    }
+
+    .form-section {
+        flex: 1;
+        max-height: none; 
+        overflow-y: visible; 
+        padding: 40px 20px;
+    }
+
+    .language-selector {
+        top: 20px;
+        right: 20px;
+    }
+}

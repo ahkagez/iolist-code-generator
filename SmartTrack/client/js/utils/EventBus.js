@@ -1,0 +1,17 @@
+class EventBus {
+  #listeners = {};
+
+  on(event, callback) {
+    (this.#listeners[event] ??= []).push(callback);
+  }
+
+  off(event, callback) {
+    this.#listeners[event] = this.#listeners[event]?.filter(cb => cb !== callback);
+  }
+
+  emit(event, data) {
+    this.#listeners[event]?.forEach(cb => cb(data));
+  }
+}
+
+export const eventBus = new EventBus();

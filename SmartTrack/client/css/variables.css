@@ -1,0 +1,20 @@
+:root {
+    /* Paleta Corporativa */
+    --primary-blue: #124C8C;
+    --accent-blue: #1B75BC;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    
+    /* Textos y Bordes */
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --border-color: #e5e7eb;
+    
+    /* Estados */
+    --status-active: #10B981;
+    --status-inactive: #EF4444;
+    
+    /* Dimensiones Estructurales */
+    --navbar-height: 80px;
+    --sidebar-width: 340px;
+}

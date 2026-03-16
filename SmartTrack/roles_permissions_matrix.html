@@ -1,0 +1,150 @@
+
+<style>
+.pm { width: 100%; border-collapse: collapse; font-size: 13px; }
+.pm th, .pm td { padding: 8px 10px; text-align: left; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.pm th { font-weight: 500; font-size: 12px; color: var(--color-text-secondary); position: sticky; top: 0; background: var(--color-background-primary); }
+.pm td:first-child { font-weight: 400; color: var(--color-text-primary); min-width: 190px; }
+.pm td:not(:first-child) { text-align: center; min-width: 80px; }
+.pm tr:hover { background: var(--color-background-secondary); }
+.cat { font-weight: 500; font-size: 12px; color: var(--color-text-secondary); padding: 14px 10px 6px; border-bottom: 0.5px solid var(--color-border-secondary); letter-spacing: 0.04em; }
+.y { display:inline-block; width:20px; height:20px; border-radius:50%; background: #EAF3DE; line-height:20px; text-align:center; font-size:11px; }
+.n { display:inline-block; width:20px; height:20px; border-radius:50%; background: #FCEBEB; line-height:20px; text-align:center; font-size:11px; }
+.p { display:inline-block; padding:2px 8px; border-radius:var(--border-radius-md); background: #FAEEDA; font-size:11px; }
+.role-badge { display:inline-block; padding: 3px 10px; border-radius: var(--border-radius-md); font-size: 12px; font-weight: 500; }
+.tabs { display:flex; gap:8px; margin-bottom: 1.5rem; }
+.tab { padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: transparent; cursor: pointer; font-size: 13px; color: var(--color-text-secondary); transition: all 0.15s; }
+.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; border-color: var(--color-border-secondary); }
+.tab:hover { background: var(--color-background-secondary); }
+.view { display: none; }
+.view.active { display: block; }
+.legend { display: flex; gap: 16px; margin: 1rem 0 0; font-size: 12px; color: var(--color-text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+</style>
+
+<div style="padding: 1rem 0;">
+  <div class="tabs">
+    <button class="tab active" onclick="showView('matrix',this)">Matriz de permisos</button>
+    <button class="tab" onclick="showView('detail',this)">Detalle por rol</button>
+  </div>
+
+  <div id="matrix" class="view active">
+    <table class="pm">
+      <thead>
+        <tr>
+          <th>Accion</th>
+          <th><span class="role-badge" style="background:#FCEBEB;color:#791F1F;">Admin</span></th>
+          <th><span class="role-badge" style="background:#FAEEDA;color:#633806;">Supervisor</span></th>
+          <th><span class="role-badge" style="background:#E6F1FB;color:#0C447C;">Operador</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="4" class="cat">Mapa</td></tr>
+        <tr><td>Ver mapa y markers</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="y">si</span></td></tr>
+        <tr><td>Cambiar estilo de mapa</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="y">si</span></td></tr>
+        <tr><td>Click en punto (ver detalle)</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="y">si</span></td></tr>
+
+        <tr><td colspan="4" class="cat">Ubicaciones</td></tr>
+        <tr><td>Crear ubicacion / barco</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Editar datos de ubicacion</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Mover barco (drag / coords)</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Eliminar / desactivar ubicacion</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Subir imagenes de barcos</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Eliminar imagenes</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+
+        <tr><td colspan="4" class="cat">Empleados</td></tr>
+        <tr><td>Ver lista de empleados</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="y">si</span></td></tr>
+        <tr><td>Crear empleado</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Editar datos de empleado</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Cambiar ubicacion de empleado</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="p">solo propia</span></td></tr>
+        <tr><td>Desactivar empleado</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+
+        <tr><td colspan="4" class="cat">Sesiones (entrada / salida)</td></tr>
+        <tr><td>Marcar propia entrada / salida</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="y">si</span></td></tr>
+        <tr><td>Marcar entrada / salida de otros</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Ver historial de sesiones</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="p">solo propias</span></td></tr>
+        <tr><td>Ver tiempo total por ubicacion</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="p">solo propio</span></td></tr>
+
+        <tr><td colspan="4" class="cat">Logs y auditoria</td></tr>
+        <tr><td>Ver logs de todos los usuarios</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Ver logs de su equipo</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Ver sus propios logs</td><td><span class="y">si</span></td><td><span class="y">si</span></td><td><span class="y">si</span></td></tr>
+        <tr><td>Exportar logs</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+
+        <tr><td colspan="4" class="cat">Usuarios y sistema</td></tr>
+        <tr><td>Crear usuarios</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Cambiar rol de usuario</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Desactivar usuarios</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+        <tr><td>Gestionar departamentos</td><td><span class="y">si</span></td><td><span class="n">no</span></td><td><span class="n">no</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="legend">
+      <div class="legend-item"><span class="y">si</span> Permitido</div>
+      <div class="legend-item"><span class="n">no</span> Denegado</div>
+      <div class="legend-item"><span class="p">parcial</span> Restringido</div>
+    </div>
+  </div>
+
+  <div id="detail" class="view">
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+
+      <div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <div>
+            <p style="margin:0;font-weight:500;font-size:15px;">Admin</p>
+            <p style="margin:0;font-size:12px;color:var(--color-text-secondary);">Acceso total</p>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;">
+          <p style="margin:0;">Gestiona todo el sistema: crea y elimina ubicaciones, barcos, empleados y usuarios. Controla roles, departamentos, y tiene acceso completo a los logs de auditoria de todos.</p>
+          <p style="margin:8px 0 0;font-size:12px;color:var(--color-text-tertiary);">Ejemplo: Jordi Bosch</p>
+        </div>
+      </div>
+
+      <div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#854F0B" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zm13 0l-3 3m0 0l-3-3m3 3V4"/></svg>
+          </div>
+          <div>
+            <p style="margin:0;font-weight:500;font-size:15px;">Supervisor</p>
+            <p style="margin:0;font-size:12px;color:var(--color-text-secondary);">Gestiona operaciones</p>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;">
+          <p style="margin:0;">Edita empleados y ubicaciones, mueve barcos en el mapa, sube imagenes, y registra entrada/salida de cualquier empleado. Ve los logs de su equipo pero no puede crear ni eliminar recursos del sistema.</p>
+          <p style="margin:8px 0 0;font-size:12px;color:var(--color-text-tertiary);">Ejemplo: Miguel Ramirez</p>
+        </div>
+      </div>
+
+      <div style="background:var(--color-background-primary); border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+          </div>
+          <div>
+            <p style="margin:0;font-weight:500;font-size:15px;">Operador</p>
+            <p style="margin:0;font-size:12px;color:var(--color-text-secondary);">Solo lectura + fichaje</p>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;">
+          <p style="margin:0;">Ve el mapa, los puntos y la lista de empleados. Puede marcar su propia entrada y salida de ubicaciones y ver su propio historial de sesiones. No puede editar, crear ni eliminar nada del sistema.</p>
+          <p style="margin:8px 0 0;font-size:12px;color:var(--color-text-tertiary);">Ejemplo: Ana Martinez, Pedro Soler</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>

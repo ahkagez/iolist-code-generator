@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTrack - Inicio de Sesión</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <div class="brand-section">
+            <div class="image-overlay"></div>
+            
+            <img src="assets/img/baltic-yacht-logo.png" alt="Baltic Yachts Logo" class="enterprise-logo">
+            
+            <div class="brand-content">
+                <div class="logo-placeholder">
+                    <span class="logo-icon">👁</span> SmartTrack
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="language-selector">
+                <select id="lang-switch">
+                    <option value="1" selected>Español</option>
+                    <option value="2">English</option>
+                    <option value="3">Suomi</option>
+                </select>
+            </div>
+
+            <div class="login-card">
+                <div class="form-header">
+                    <h2 data-i18n="title">Bienvenido de nuevo</h2>
+                    <p data-i18n="subtitle">Ingresa tus credenciales para acceder a tu cuenta.</p>
+                </div>
+
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="usuario" data-i18n="user">Usuario o correo electrónico</label>
+                        <input type="text" id="usuario" name="usuario" required placeholder="ejemplo@balticyacht.fi" data-i18n="user_ph">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="contrasena" data-i18n="pass">Contraseña</label>
+                            <a href="#" class="forgot-password" data-i18n="forgot">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <div class="password-wrapper">
+                            <input type="password" id="contrasena" name="contrasena" required placeholder="••••••••">
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Mostrar contraseña">
+                                <!-- Ojo cerrado (estado por defecto: contraseña oculta) -->
+                                <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login" data-i18n="btn">Iniciar sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Utilidades base -->
+    <script src="js/utils/dictionary.js"></script>
+    <script src="js/utils/I18nService.js"></script>
+    <script src="js/services/CacheService.js"></script>
+
+    <!-- Auth -->
+    <script src="js/config/constants.js"></script>
+    <script src="js/services/ApiClient.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/controllers/AuthController.js"></script>
+
+    <!-- i18n del login -->
+    <script src="js/controllers/LogController.js"></script>
+
+    <script>
+        const passwordInput = document.getElementById('contrasena');
+        const toggleBtn     = document.getElementById('togglePassword');
+
+        toggleBtn.addEventListener('mousedown', function (e) {
+            e.preventDefault(); // evita que el input pierda el foco
+            passwordInput.type = 'text';
+        });
+
+        toggleBtn.addEventListener('mouseup',    () => { passwordInput.type = 'password'; });
+        toggleBtn.addEventListener('mouseleave', () => { passwordInput.type = 'password'; });
+    </script>
+
+</body>
+</html>
